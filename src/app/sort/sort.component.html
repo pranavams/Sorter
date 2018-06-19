@@ -1,0 +1,10 @@
+<div class = 'sorter'>
+	<input [(ngModel)]="unSortedValue" placeholder="unSortedValue">
+	<button md-button (click)="doSort()">Sort</button>
+	<button md-button (click)="generateUnsorted()">Generate</button>
+</div>
+<div class = 'sorter'>
+	<p>UnSorted Elements [{{unSortedElements}}]</p>
+	<p>TypeScript Sort [{{tsSortTime}} ms] [{{tsSortedElements}}]</p>
+	<p>Bubble Sort [{{bubbleSortTime}} ms] [{{bubbleSortedElements}}]</p>
+</div>
