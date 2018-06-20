@@ -1,7 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {BubbleSort} from './bubble.sort';
+import {InsertionSort} from './insertion.sort';
+import {DefaultSort} from './default.sort';
+import {MergeSort} from './merge.sort';
 
 import {NgxMaskModule} from 'ngx-mask';
+
+import {Chart} from 'angular-highcharts';
 
 @Component({
   selector: 'app-sort',
@@ -9,25 +14,12 @@ import {NgxMaskModule} from 'ngx-mask';
   styleUrls: ['./sort.component.css']
 })
 export class SortComponent implements OnInit {
-  private unSortedElements: number[];
-  private bubbleSortedElements: number[];
   private unSortedValue: string;
-  private tsSortTime: number;
-  private tsSortedElements: number[];
-  private bubbleSortTime: number;
+  private chart: Chart;
+  private sortedValue: string;
 
-  constructor() {}
-
-  bubbleSort(tempArray) {
-    const startTime = new Date().getMilliseconds();
-    this.bubbleSortedElements = new BubbleSort().sort(tempArray);
-    this.bubbleSortTime = new Date().getMilliseconds() - startTime;
-  }
-
-  defaultSort(tempArray) {
-    const startTime = new Date().getMilliseconds();
-    this.tsSortedElements = tempArray.sort();
-    this.tsSortTime = new Date().getMilliseconds() - startTime;
+  constructor() {
+    this.chart = this.createDefaultChart();
   }
 
   numberOnly(event): boolean {
@@ -36,14 +28,18 @@ export class SortComponent implements OnInit {
       return false;
     }
     return true;
-
   }
 
   doSort() {
-    this.unSortedElements = this.convertStringToIntArray(this.unSortedValue);
-    const tempArray = this.unSortedElements.map(x => x);
-    this.bubbleSort(tempArray);
-    this.defaultSort(tempArray);
+    const tempArray = this.convertStringToIntArray(this.unSortedValue).map(x => x);
+    this.chart.addPoint(new DefaultSort(tempArray).getTimeTaken());
+    this.chart.addPoint(new InsertionSort(tempArray).getTimeTaken());
+    this.chart.addPoint(new MergeSort(tempArray).getTimeTaken());
+    this.chart.addPoint(new BubbleSort(tempArray).getTimeTaken());
+    this.sortedValue = '\nInsertion Sort [' + new InsertionSort(tempArray).sort() + ']';
+    this.sortedValue = this.sortedValue + '\nMerge Sort [' + new MergeSort(tempArray).sort() + ']';
+    this.sortedValue = this.sortedValue + '\nBubble Sort [' + new BubbleSort(tempArray).sort() + ']';
+    this.sortedValue = this.sortedValue + '\nDefault Sort [' + new BubbleSort(tempArray).sort() + ']';
   }
 
   convertStringToIntArray(valueSeries: string) {
@@ -52,12 +48,60 @@ export class SortComponent implements OnInit {
       .map((x) => parseFloat(x));
   }
 
+  getRandomNumbers(): Promise<string> {
+    return new Promise<string>((resolve, reject) => {
+      const maxValue = 100000000;
+      this.unSortedValue = Math.round((Math.random() * maxValue)) + '';
+      for (let i = 0; i < 10000; i++) {
+        this.unSortedValue = this.unSortedValue + ' ' + Math.round((Math.random() * maxValue));
+        this.unSortedValue = this.unSortedValue;
+      }
+      resolve(this.unSortedValue);
+    });
+  }
+
   generateUnsorted(): string {
-    this.unSortedValue = '';
-    for (let i = 0; i < 1000; i ++) {
-      this.unSortedValue = this.unSortedValue + ' ' + Math.round((Math.random() * 1000));
-    }
+    this.getRandomNumbers().then(
+      (randomNumbers) => (this.unSortedValue = randomNumbers)
+    );
     return this.unSortedValue;
+  }
+
+  createDefaultChart() {
+    return new Chart({
+      chart: {
+        type: 'line'
+      },
+      title: {
+        text: 'Sort Comparision'
+      },
+
+      xAxis: {
+        title: {
+          text: 'Sorting Algorithms'
+        },
+        categories: ['Default Sort', 'InsertionSort', 'Merge Sort', 'Bubble Sort']
+      },
+
+      yAxis: {
+        title: {
+          text: 'Milliseconds consumed to Sort'
+        }
+      },
+
+      legend: {
+        enabled: false
+      },
+      credits: {
+        enabled: false
+      },
+      series: [
+        {
+          data: []
+        },
+      ]
+    });
+
   }
 
   ngOnInit() {

@@ -1,19 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { ChartModule } from 'angular-highcharts';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { SortComponent } from './sort/sort.component';
 
-import { FormsModule } from '@angular/forms';
-
 @NgModule({
   declarations: [
     AppComponent,
-    SortComponent
+    SortComponent,
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    ChartModule
   ],
   providers: [],
   bootstrap: [AppComponent]

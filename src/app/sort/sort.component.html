@@ -1,10 +1,13 @@
-<div class = 'sorter'>
-	<input [(ngModel)]="unSortedValue" placeholder="unSortedValue">
-	<button md-button (click)="doSort()">Sort</button>
-	<button md-button (click)="generateUnsorted()">Generate</button>
-</div>
-<div class = 'sorter'>
-	<p>UnSorted Elements [{{unSortedElements}}]</p>
-	<p>TypeScript Sort [{{tsSortTime}} ms] [{{tsSortedElements}}]</p>
-	<p>Bubble Sort [{{bubbleSortTime}} ms] [{{bubbleSortedElements}}]</p>
+<div class='wrapper'>
+	<div class='sorter'>
+		<button md-button (click)="generateUnsorted()">Generate</button>
+		<button md-button (click)="doSort()">Sort</button>
+	</div>
+	<div class="charts" [chart]="chart"></div>
+	<div class='elements'>
+		<textarea readonly="readonly" class="textArea">{{unSortedValue}}</textarea>
+	</div>
+	<div class='sortedElements'>
+		<textarea readonly="readonly" class="sortedElements">{{sortedValue}}</textarea>
+	</div>
 </div>

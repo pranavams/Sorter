@@ -1,20 +1,23 @@
 /**
  */
+import {Sort} from './sort';
 
-export class BubbleSort {
+export class BubbleSort extends Sort {
 
-  constructor() {}
+  constructor(elements: number[]) {
+    super(elements);
+  }
 
-  sort(tempArray: number[]) {
-    for (let i = 0; i < tempArray.length; i++) {
-      for (let j = i + 1; j < tempArray.length; j++) {
-        if (tempArray[i] > tempArray[j]) {
-          const temp = tempArray[i];
-          tempArray[i] = tempArray[j];
-          tempArray[j] = temp;
+  sort(): number[] {
+    for (let i = 0; i < this.elements.length; i++) {
+      for (let j = i + 1; j < this.elements.length; j++) {
+        if (this.elements[i] > this.elements[j]) {
+          const temp = this.elements[i];
+          this.elements[i] = this.elements[j];
+          this.elements[j] = temp;
         }
       }
     }
-    return tempArray;
+    return this.elements;
   }
 }
